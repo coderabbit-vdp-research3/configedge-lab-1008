@@ -1,20 +1,16 @@
-# CONFIGEDGE R5 — YAML DUPLICATE KEYS (authorized CodeRabbit VDP; marker configedge_)
-# Two keys declared twice at the same mapping level, values typed-opposite in effect:
-#   profile: assertive  (first)   vs  profile: quiet  (second)
-#   path_filters: ["!configedge_payload.py"] (first, EXCLUDE payload)
-#              vs path_filters: ["configedge_payload.py"] (second, INCLUDE payload)
-# Which value the SERVER applies is directly observable:
-#   banner "Review profile: ASSERTIVE|QUIET"  +  "Files selected for processing".
-# Common YAML parsers (PyYAML, js-yaml) are last-wins; a strict parser errors.
+# CONFIGEDGE R6 — boolean-typed-as-string, three-way discriminator
+# (authorized CodeRabbit VDP; marker configedge_)
+# reviews.auto_review.enabled is documented boolean; sent as the STRING "false",
+# paired with description_keyword that is deliberately NOT in the PR title/body.
+#   branch A: key rejected at validation      -> default enabled=true -> RUN + warning listed
+#   branch B: accepted as-is, treated truthy  -> RUN + NO warning for `enabled`
+#   branch C: accepted and parsed to false    -> keyword absent -> SKIPPED (status only, no comment)
+# Controls: profile=assertive, list-form path_filters exclusion.
 reviews:
   profile: assertive
   path_filters:
     - "!configedge_payload.py"
-  profile: quiet
-  path_filters:
-    - "configedge_payload.py"
   auto_review:
-    enabled: true
-    # harness control (valid key, identical in every cell): disable the
-    # default 5-reviewed-commit auto-pause so every cell can run
+    enabled: "false"
     auto_pause_after_reviewed_commits: 0
+    description_keyword: "configedge_triggerword_absent"
