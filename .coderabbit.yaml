@@ -1,20 +1,21 @@
-# CONFIGEDGE R5 — YAML DUPLICATE KEYS (authorized CodeRabbit VDP; marker configedge_)
-# Two keys declared twice at the same mapping level, values typed-opposite in effect:
-#   profile: assertive  (first)   vs  profile: quiet  (second)
-#   path_filters: ["!configedge_payload.py"] (first, EXCLUDE payload)
-#              vs path_filters: ["configedge_payload.py"] (second, INCLUDE payload)
-# Which value the SERVER applies is directly observable:
-#   banner "Review profile: ASSERTIVE|QUIET"  +  "Files selected for processing".
-# Common YAML parsers (PyYAML, js-yaml) are last-wins; a strict parser errors.
+# CONFIGEDGE R7 — ENUM battery: near-miss STRING on the headline enum + NUMBER where a
+# string-enum is expected (authorized CodeRabbit VDP; marker configedge_)
+# - reviews.profile: "ASSERTIVE" (case near-miss; documented enum is quiet|chill|assertive).
+#   Discriminator: the run banner prints "Review profile: <X>" — ASSERTIVE means the
+#   near-miss value was accepted/applied, CHILL means it was rejected and the schema
+#   default took over, QUIET would mean case-folding + a different member.
+# - reviews.tools.phpstan.level: 3 (NUMBER where the enum is a set of STRINGS
+#   "0".."9"|"default"|"max") — the "vs 2" branch of the mission's enum battery.
+# Controls: profile key is NOT valid here by design; controls are the list-form
+# path_filters exclusion + auto_review.enabled true + auto_pause 0.
 reviews:
-  profile: assertive
+  profile: "ASSERTIVE"
   path_filters:
     - "!configedge_payload.py"
-  profile: quiet
-  path_filters:
-    - "configedge_payload.py"
   auto_review:
     enabled: true
-    # harness control (valid key, identical in every cell): disable the
-    # default 5-reviewed-commit auto-pause so every cell can run
     auto_pause_after_reviewed_commits: 0
+  tools:
+    phpstan:
+      enabled: true
+      level: 3
