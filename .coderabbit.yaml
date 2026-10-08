@@ -1,0 +1,15 @@
+# CONFIGEDGE R9 — SINGLE DEFECT vs R8 control: one LIST->STRING type error only
+# (authorized CodeRabbit VDP; marker configedge_)
+# Byte-identical to R8 except `reviews.path_filters` is a bare STRING instead of an array.
+#   branch A (whole-file rejection):  central file used -> banner ".../coderabbit/.coderabbit.yaml",
+#                                     Review profile CHILL, central's warning only,
+#                                     Files selected = 2 (payload no longer excluded)
+#   branch B (partial application):   our file used -> ASSERTIVE, payload still excluded (1 file),
+#                                     warning text naming path_filters (message class captured here)
+#   branch C (accepted + coerced):    our file used, no warning for path_filters, payload excluded (1)
+reviews:
+  profile: assertive
+  path_filters: "!configedge_payload.py"
+  auto_review:
+    enabled: true
+    auto_pause_after_reviewed_commits: 0
