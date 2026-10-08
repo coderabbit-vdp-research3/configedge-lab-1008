@@ -1,14 +1,11 @@
-# CONFIGEDGE R8 — DISAMBIGUATION CONTROL (authorized CodeRabbit VDP; marker configedge_)
-# Identical to the R0 control EXCEPT for the harness pause key. Two questions:
-#   (1) is a fully-VALID config still consumed from the PR head after R1..R6 (fallback repair)?  ->
-#       banner must read "Configuration used: Repository: coderabbit-vdp-research3/configedge-lab-1008/.coderabbit.yaml"
-#       and "Review profile: ASSERTIVE" and 0 parsing warnings and payload excluded (1 file)
-#   (2) is `reviews.auto_review.auto_pause_after_reviewed_commits: 0` itself accepted?
-#       (it is the ONE key present in R1..R6 but absent from the working R0; if R8 also
-#        falls back to the central file, this key - not the type errors - is the culprit)
-# Also unblocks the auto-pause that made R5/R6 return "Review paused".
+# CONFIGEDGE R12 — VALID VARIANT on the SECOND commit of PR#2 (authorized CodeRabbit VDP)
+# Byte-identical to R8 except `reviews.profile: quiet` (was assertive).
+# Purpose: separate "a repo config that merely CHANGES between commits is still read"
+# (expected: banner "Review profile: QUIET" + our file path) from the Alt-10 hypothesis
+# that only the FIRST commit's config is ever honoured. Without this cell a later
+# fallback on R9 would be ambiguous (type error vs "modified config ignored").
 reviews:
-  profile: assertive
+  profile: quiet
   path_filters:
     - "!configedge_payload.py"
   auto_review:
