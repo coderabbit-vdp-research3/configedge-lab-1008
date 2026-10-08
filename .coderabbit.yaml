@@ -1,53 +1,20 @@
-# CONFIGEDGE R4 — number-where-object, object-where-string (depth<=5), bounded oversize
-# (authorized CodeRabbit VDP; marker configedge_)
-# - reviews.slop_detection: NUMBER where object expected
-# - tone_instructions (ROOT key): nested mapping depth 5 where STRING expected
-#   (bounded depth 5, ~200 bytes — well under any DoS threshold)
-# - reviews.tone_instructions: the same name placed at the WRONG level — a nested
-#   UNKNOWN key (root has additionalProperties:false, nested objects do not) → probes
-#   whether the server warns about unknown keys below the root (client schema does not)
-# - reviews.post_merge_actions: 7 items vs documented maxItems 5 (bounded oversize;
-#   every item enabled:false and this lane never merges, so nothing can execute)
-# Controls: profile=assertive, list-form path_filters exclusion.
-tone_instructions:
-  l1:
-    l2:
-      l3:
-        l4:
-          l5: "configedge_depth5"
+# CONFIGEDGE R5 — YAML DUPLICATE KEYS (authorized CodeRabbit VDP; marker configedge_)
+# Two keys declared twice at the same mapping level, values typed-opposite in effect:
+#   profile: assertive  (first)   vs  profile: quiet  (second)
+#   path_filters: ["!configedge_payload.py"] (first, EXCLUDE payload)
+#              vs path_filters: ["configedge_payload.py"] (second, INCLUDE payload)
+# Which value the SERVER applies is directly observable:
+#   banner "Review profile: ASSERTIVE|QUIET"  +  "Files selected for processing".
+# Common YAML parsers (PyYAML, js-yaml) are last-wins; a strict parser errors.
 reviews:
   profile: assertive
   path_filters:
     - "!configedge_payload.py"
+  profile: quiet
+  path_filters:
+    - "configedge_payload.py"
   auto_review:
     enabled: true
+    # harness control (valid key, identical in every cell): disable the
+    # default 5-reviewed-commit auto-pause so every cell can run
     auto_pause_after_reviewed_commits: 0
-  slop_detection: 7
-  tone_instructions:
-    l1:
-      l2:
-        l3:
-          l4:
-            l5: "configedge_nested_unknown_key"
-  post_merge_actions:
-    - enabled: false
-      name: "configedge_a1"
-      prompt: "configedge bounded oversize item 1"
-    - enabled: false
-      name: "configedge_a2"
-      prompt: "configedge bounded oversize item 2"
-    - enabled: false
-      name: "configedge_a3"
-      prompt: "configedge bounded oversize item 3"
-    - enabled: false
-      name: "configedge_a4"
-      prompt: "configedge bounded oversize item 4"
-    - enabled: false
-      name: "configedge_a5"
-      prompt: "configedge bounded oversize item 5"
-    - enabled: false
-      name: "configedge_a6"
-      prompt: "configedge bounded oversize item 6"
-    - enabled: false
-      name: "configedge_a7"
-      prompt: "configedge bounded oversize item 7"
