@@ -1,14 +1,23 @@
-# CONFIGEDGE R1 — LIST -> STRING confusion (authorized CodeRabbit VDP; marker configedge_)
-# Every list-typed key below is given a bare STRING instead of an array.
-# Control key (reviews.profile: assertive) kept valid to prove partial application.
+# CONFIGEDGE R2 — ENUM / NUMBER / STRING near-miss confusion (authorized CodeRabbit VDP; marker configedge_)
+# - language: near-miss enum ("en_US" vs documented "en-US")
+# - profile control kept VALID (assertive) + valid list-form path_filters control
+# - pre_merge_checks.docstrings.mode: NUMBER where enum-string expected
+# - pre_merge_checks.docstrings.threshold: STRING where number expected
+# - tone_instructions: LIST where STRING expected (the "vice versa" cell)
+language: "en_US"
+tone_instructions:
+  - "configedge_list_where_string_a"
+  - "configedge_list_where_string_b"
 reviews:
   profile: assertive
-  path_filters: "!configedge_payload.py"
+  path_filters:
+    - "!configedge_payload.py"
   auto_review:
     enabled: true
     # harness control (valid key, identical in every cell): disable the
     # default 5-reviewed-commit auto-pause so every cell can run
     auto_pause_after_reviewed_commits: 0
-    labels: "configedge-nonexistent-label"
-    ignore_usernames: "configedge_ghost"
-    base_branches: "main"
+  pre_merge_checks:
+    docstrings:
+      mode: 2
+      threshold: "80"
