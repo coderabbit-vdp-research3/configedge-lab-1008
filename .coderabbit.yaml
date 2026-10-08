@@ -1,16 +1,16 @@
-# CONFIGEDGE R6 — boolean-typed-as-string, three-way discriminator
-# (authorized CodeRabbit VDP; marker configedge_)
-# reviews.auto_review.enabled is documented boolean; sent as the STRING "false",
-# paired with description_keyword that is deliberately NOT in the PR title/body.
-#   branch A: key rejected at validation      -> default enabled=true -> RUN + warning listed
-#   branch B: accepted as-is, treated truthy  -> RUN + NO warning for `enabled`
-#   branch C: accepted and parsed to false    -> keyword absent -> SKIPPED (status only, no comment)
-# Controls: profile=assertive, list-form path_filters exclusion.
+# CONFIGEDGE R8 — DISAMBIGUATION CONTROL (authorized CodeRabbit VDP; marker configedge_)
+# Identical to the R0 control EXCEPT for the harness pause key. Two questions:
+#   (1) is a fully-VALID config still consumed from the PR head after R1..R6 (fallback repair)?  ->
+#       banner must read "Configuration used: Repository: coderabbit-vdp-research3/configedge-lab-1008/.coderabbit.yaml"
+#       and "Review profile: ASSERTIVE" and 0 parsing warnings and payload excluded (1 file)
+#   (2) is `reviews.auto_review.auto_pause_after_reviewed_commits: 0` itself accepted?
+#       (it is the ONE key present in R1..R6 but absent from the working R0; if R8 also
+#        falls back to the central file, this key - not the type errors - is the culprit)
+# Also unblocks the auto-pause that made R5/R6 return "Review paused".
 reviews:
   profile: assertive
   path_filters:
     - "!configedge_payload.py"
   auto_review:
-    enabled: "false"
+    enabled: true
     auto_pause_after_reviewed_commits: 0
-    description_keyword: "configedge_triggerword_absent"
