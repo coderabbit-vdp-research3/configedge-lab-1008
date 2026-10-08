@@ -1,9 +1,14 @@
-# CONFIGEDGE R0 CONTROL (authorized CodeRabbit VDP; marker configedge_)
-# Valid v2 config: proves the file is consumed, the control key applies,
-# and the documented list-form path_filters exclusion works.
+# CONFIGEDGE R1 — LIST -> STRING confusion (authorized CodeRabbit VDP; marker configedge_)
+# Every list-typed key below is given a bare STRING instead of an array.
+# Control key (reviews.profile: assertive) kept valid to prove partial application.
 reviews:
   profile: assertive
-  path_filters:
-    - "!configedge_payload.py"
+  path_filters: "!configedge_payload.py"
   auto_review:
     enabled: true
+    # harness control (valid key, identical in every cell): disable the
+    # default 5-reviewed-commit auto-pause so every cell can run
+    auto_pause_after_reviewed_commits: 0
+    labels: "configedge-nonexistent-label"
+    ignore_usernames: "configedge_ghost"
+    base_branches: "main"
