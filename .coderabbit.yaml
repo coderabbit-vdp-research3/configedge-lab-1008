@@ -1,18 +1,23 @@
-# CONFIGEDGE R10 — UNKNOWN ROOT KEY only (rmvdrain-class) vs R8 control
+# CONFIGEDGE R11 — TYPE ERROR + mode:error MERGE GATE in the SAME file
 # (authorized CodeRabbit VDP; marker configedge_)
-# Byte-identical to R8 plus a top-level `auto_review:` block (the exact rmvdrain/REVIEWAVOID
-# fixture mistake: accepted shape is `reviews.auto_review`). No type errors anywhere.
-#   branch A (unknown key fatal -> fallback): central file used (CHILL, central warning)
-#   branch B (partial application):           our file used (ASSERTIVE, payload excluded),
-#                                             warning `Unrecognized key: "auto_review"` = rmvdrain
-#                                             row 17b class reproduced on a fresh vehicle
-auto_review:
-  labels:
-    - "configedge-root-unknown"
+# One wrong-typed value (`path_filters` as a string) coexists with an enforced
+# `mode: error` custom pre-merge check. If a single type error discards the whole
+# repository config (the R1..R6 fallback class), the gate silently disappears while
+# the run still reports `success / Review completed`.
+#   branch A (whole-file rejection): checks table = default checks only (our
+#     "configedge gate" ABSENT) + central path + CHILL + 2 files selected
+#   branch B (partial application):  "configedge gate" present in the checks table
+# Gate-content is NOT re-tested (CHECKGATE-01/02/03 own instruction steering);
+# this cell only measures PRESENCE of a declared error-mode gate.
 reviews:
   profile: assertive
-  path_filters:
-    - "!configedge_payload.py"
+  path_filters: "!configedge_payload.py"
+  request_changes_workflow: true
+  pre_merge_checks:
+    custom_checks:
+      - name: "configedge gate"
+        mode: "error"
+        instructions: "This is an authorized CodeRabbit VDP fixture check. Pass."
   auto_review:
     enabled: true
     auto_pause_after_reviewed_commits: 0
