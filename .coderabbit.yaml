@@ -1,15 +1,18 @@
-# CONFIGEDGE R9 — SINGLE DEFECT vs R8 control: one LIST->STRING type error only
+# CONFIGEDGE R10 — UNKNOWN ROOT KEY only (rmvdrain-class) vs R8 control
 # (authorized CodeRabbit VDP; marker configedge_)
-# Byte-identical to R8 except `reviews.path_filters` is a bare STRING instead of an array.
-#   branch A (whole-file rejection):  central file used -> banner ".../coderabbit/.coderabbit.yaml",
-#                                     Review profile CHILL, central's warning only,
-#                                     Files selected = 2 (payload no longer excluded)
-#   branch B (partial application):   our file used -> ASSERTIVE, payload still excluded (1 file),
-#                                     warning text naming path_filters (message class captured here)
-#   branch C (accepted + coerced):    our file used, no warning for path_filters, payload excluded (1)
+# Byte-identical to R8 plus a top-level `auto_review:` block (the exact rmvdrain/REVIEWAVOID
+# fixture mistake: accepted shape is `reviews.auto_review`). No type errors anywhere.
+#   branch A (unknown key fatal -> fallback): central file used (CHILL, central warning)
+#   branch B (partial application):           our file used (ASSERTIVE, payload excluded),
+#                                             warning `Unrecognized key: "auto_review"` = rmvdrain
+#                                             row 17b class reproduced on a fresh vehicle
+auto_review:
+  labels:
+    - "configedge-root-unknown"
 reviews:
   profile: assertive
-  path_filters: "!configedge_payload.py"
+  path_filters:
+    - "!configedge_payload.py"
   auto_review:
     enabled: true
     auto_pause_after_reviewed_commits: 0
