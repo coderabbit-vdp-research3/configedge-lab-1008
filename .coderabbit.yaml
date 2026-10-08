@@ -1,0 +1,21 @@
+# CONFIGEDGE R7 — ENUM battery: near-miss STRING on the headline enum + NUMBER where a
+# string-enum is expected (authorized CodeRabbit VDP; marker configedge_)
+# - reviews.profile: "ASSERTIVE" (case near-miss; documented enum is quiet|chill|assertive).
+#   Discriminator: the run banner prints "Review profile: <X>" — ASSERTIVE means the
+#   near-miss value was accepted/applied, CHILL means it was rejected and the schema
+#   default took over, QUIET would mean case-folding + a different member.
+# - reviews.tools.phpstan.level: 3 (NUMBER where the enum is a set of STRINGS
+#   "0".."9"|"default"|"max") — the "vs 2" branch of the mission's enum battery.
+# Controls: profile key is NOT valid here by design; controls are the list-form
+# path_filters exclusion + auto_review.enabled true + auto_pause 0.
+reviews:
+  profile: "ASSERTIVE"
+  path_filters:
+    - "!configedge_payload.py"
+  auto_review:
+    enabled: true
+    auto_pause_after_reviewed_commits: 0
+  tools:
+    phpstan:
+      enabled: true
+      level: 3
