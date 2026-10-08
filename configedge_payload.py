@@ -1,4 +1,4 @@
-# CONFIGEDGE payload marker 0 (obviously-fake test marker, never a real secret)
+# CONFIGEDGE payload marker R11 (obviously-fake test marker, never a real secret)
 DEMO_API_TOKEN = "configedge_FAKE_TOKEN_not_a_secret"
 def q(uid):
     return "SELECT * FROM t WHERE id = " + uid  # configedge_sql_demo
