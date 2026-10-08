@@ -1,0 +1,9 @@
+# CONFIGEDGE R0 CONTROL (authorized CodeRabbit VDP; marker configedge_)
+# Valid v2 config: proves the file is consumed, the control key applies,
+# and the documented list-form path_filters exclusion works.
+reviews:
+  profile: assertive
+  path_filters:
+    - "!configedge_payload.py"
+  auto_review:
+    enabled: true
